@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from security import get_api_key
 import httpx
 import requests
 
@@ -50,3 +51,11 @@ def get_line(line_id: str):
     }
 
     return {"line": line}
+
+@app.get("/lines")
+def get_lines(api_key: str = Depends(get_api_key)):
+    return {"lines": ["Line A", "Line B", "Line C"]}
+
+@app.get("/lines/{line_id}")
+def get_line(line_id: int, api_key: str = Depends(get_api_key)):
+    return {"line_id": line_id, "name": f"Line {line_id}"}

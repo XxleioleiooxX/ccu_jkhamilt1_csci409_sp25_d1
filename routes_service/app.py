@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from security import get_api_key
 import requests
 
 app = FastAPI()
@@ -46,3 +47,11 @@ def get_route(route_id: str):
     }
     # Return the data to the user
     return {"routes": route}
+
+@app.get("/routes")
+def get_routes(api_key: str = Depends(get_api_key)):
+    return {"routes": ["Route 1", "Route 2", "Route 3"]}
+
+@app.get("/routes/{route_id}")
+def get_route(route_id: int, api_key: str = Depends(get_api_key)):
+    return {"route_id": route_id, "name": f"Route {route_id}"}

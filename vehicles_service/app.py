@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from security import get_api_key
 import httpx
 import requests
 
@@ -50,3 +51,11 @@ async def read_vehicle(
     vehicle=Depends(get_vehicle_by_id)
 ):
     return vehicle
+
+@app.get("/vehicles")
+def get_vehicles(api_key: str = Depends(get_api_key)):
+    return {"vehicles": ["Bus 101", "Bus 102", "Bus 103"]}
+
+@app.get("/vehicles/{vehicle_id}")
+def get_vehicle(vehicle_id: int, api_key: str = Depends(get_api_key)):
+    return {"vehicle_id": vehicle_id, "name": f"Vehicle {vehicle_id}"}

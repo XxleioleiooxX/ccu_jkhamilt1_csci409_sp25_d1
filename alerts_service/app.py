@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from security import get_api_key
 import httpx
 import requests
 
@@ -48,3 +49,11 @@ async def read_alerts(
 @app.get("/alerts/{alert_id}")
 async def read_alert(alert_id: str, alert=Depends(get_alert_by_id)):
     return alert
+
+@app.get("/alerts")
+def get_alerts(api_key: str = Depends(get_api_key)):
+    return {"alerts": ["Delay on Route 1", "Maintenance on Route 3"]}
+
+@app.get("/alerts/{alert_id}")
+def get_alert(alert_id: int, api_key: str = Depends(get_api_key)):
+    return {"alert_id": alert_id, "message": f"Alert {alert_id}"}
